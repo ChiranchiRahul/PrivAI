@@ -1,9 +1,9 @@
 import streamlit as st
 from openai import OpenAI
 from utils.dsar_generator import generate_dsar
-from utils.audit_analyzer import audit_privacy_policy  # ✅ fixed import
+from utils.audit_analyzer import audit_privacy_policy
 
-# 🔐 Use API key from secrets.toml
+# 🔐 Load OpenRouter key from secrets
 client = OpenAI(
     api_key=st.secrets["openai"]["api_key"],
     base_url="https://openrouter.ai/api/v1"
@@ -13,7 +13,7 @@ client = OpenAI(
 st.sidebar.title("🔒 PrivAI: PrivacyOps Assistant")
 page = st.sidebar.radio("Choose a Tool", ["DSAR Generator", "Privacy Risk Audit"])
 
-# 📄 1. DSAR Generator Page
+# 📄 1. DSAR Generator
 if page == "DSAR Generator":
     st.title("📄 DSAR Generator")
 
@@ -29,7 +29,7 @@ if page == "DSAR Generator":
             st.subheader("✉️ Generated DSAR Letter")
             st.code(dsar_text)
 
-# 🔎 2. Privacy Policy Risk Analyzer
+# 🔎 2. Privacy Risk Audit
 elif page == "Privacy Risk Audit":
     st.title("🔍 Privacy Policy Risk Audit")
     uploaded_file = st.file_uploader("Upload Privacy Policy (PDF)", type=["pdf"])
