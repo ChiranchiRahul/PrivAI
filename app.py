@@ -1,42 +1,42 @@
+# app.py
+
 import streamlit as st
-import os
-from openai import OpenAI
 from utils.dsar_generator import generate_dsar
-from utils.audit_analyzer import audit_privacy_policy
+from utils.audit_analyzer import analyze_policy
+import pdfplumber
+import os
 
-# ✅ Secure client init from Streamlit secrets
-client = OpenAI(
-    api_key=os.getenv("OPENROUTER_API_KEY"),
-    base_url="https://openrouter.ai/api/v1"
-)
+st.set_page_config(page_title="PrivAI - PrivacyOps Assistant")
 
-st.set_page_config(page_title="PrivAI – GenAI PrivacyOps", layout="centered")
-st.sidebar.title("🔒 PrivAI: PrivacyOps Assistant")
-page = st.sidebar.radio("Choose a Tool", ["DSAR Generator", "Privacy Risk Audit"])
+st.title("🛡️ PrivAI: PrivacyOps Assistant")
 
-# 📄 1. DSAR Generator
-if page == "DSAR Generator":
-    st.title("📄 DSAR Generator")
-    with st.form("dsar_form"):
-        name = st.text_input("Full Name", placeholder="Rahul Chiranchi")
-        email = st.text_input("Email", placeholder="your@email.com")
-        provider = st.text_input("Company Name", placeholder="Meta")
-        req_type = st.selectbox("Request Type", ["Access", "Deletion"])
-        submit = st.form_submit_button("Generate DSAR")
+tabs = st.tabs(["📄 Privacy Policy Analyzer", "📬 Generate DSAR"])
 
-        if submit:
-            dsar_text = generate_dsar(name, email, provider, req_type, client)
-            st.subheader("✉️ Generated DSAR Letter")
-            st.code(dsar_text)
+with tabs[0]:
+    st.subheader("Upload a Privacy Policy PDF")
+    uploaded_file = st.file_uploader("Choose a PDF file", type="pdf")
 
-# 🔎 2. Privacy Risk Audit
-elif page == "Privacy Risk Audit":
-    st.title("🔍 Privacy Policy Risk Audit")
-    uploaded_file = st.file_uploader("Upload Privacy Policy (PDF)", type=["pdf"])
+    if uploaded_file:
+        with pdfplumber.open(uploaded_file) as pdf:
+            policy_text = "\n".join(page.extract_text() for page in pdf.pages if page.extract_text())
 
-    if uploaded_file is not None:
-        with st.spinner("Analyzing for risks..."):
-            report = audit_privacy_policy(uploaded_file, client)
-            st.success("✅ Audit Complete")
-            st.subheader("🧾 Risk Audit Report")
-            st.markdown(report)
+        if st.button("Analyze Policy"):
+            with st.spinner("Analyzing..."):
+                report = analyze_policy(policy_text)
+                st.success("Analysis Complete")
+                st.text_area("Compliance Summary", report, height=300)
+
+with tabs[1]:
+    st.subheader("Generate a DSAR (Data Subject Access Request)")
+    name = st.text_input("Your Name")
+    email = st.text_input("Your Email")
+    provider = st.text_input("Data Controller / Company Name")
+    req_type = st.selectbox("Request Type", ["Access", "Deletion", "Correction", "Portability"])
+
+    if st.button("Generate DSAR Letter"):
+        if name and email and provider and req_type:
+            with st.spinner("Generating..."):
+                dsar_text = generate_dsar(name, email, provider, req_type)
+                st.text_area("DSAR Letter", dsar_text, height=300)
+        else:
+            st.warning("Please fill in all fields.")
