@@ -25,9 +25,10 @@ if page == "DSAR Generator":
         submit = st.form_submit_button("Generate DSAR")
 
         if submit:
-            dsar_text = generate_dsar(name, email, provider, req_type)
-            st.subheader("✉️ Generated DSAR Letter")
-            st.code(dsar_text)
+    dsar_text = generate_dsar(name, email, provider, req_type, client)
+    st.subheader("✉️ Generated DSAR Letter")
+    st.code(dsar_text)
+
 
 # 🔎 2. Privacy Policy Risk Analyzer
 elif page == "Privacy Risk Audit":
