@@ -1,5 +1,3 @@
-# utils/dsar_generator.py
-
 from utils.openrouter_client import get_client
 
 def generate_dsar(name, email, provider, req_type):
@@ -11,7 +9,7 @@ def generate_dsar(name, email, provider, req_type):
     ]
 
     response = client.chat.completions.create(
-        model="openrouter/openai/gpt-3.5-turbo",
+        model="gpt-3.5-turbo",  # ✅ FIXED: removed invalid OpenRouter prefix
         messages=messages
     )
     return response.choices[0].message.content.strip()
