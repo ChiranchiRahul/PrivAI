@@ -1,26 +1,26 @@
-import pdfplumber
-from openai import OpenAI
-
-client = OpenAI(
-    api_key="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",
-    base_url="https://openrouter.ai/api/v1"
-)
-
-def extract_text_from_pdf(uploaded_file):
-    with pdfplumber.open(uploaded_file) as pdf:
-        return "\n".join([page.extract_text() for page in pdf.pages if page.extract_text()])
-
-def analyze_privacy_policy(text):
+def audit_privacy_policy(text, client):
     prompt = f"""
-You are a privacy compliance auditor. Review this privacy policy and return a bullet-point list of risks, missing GDPR/CCPA clauses, and vague or non-compliant sections.
+    You are a privacy compliance expert.
 
---- POLICY START ---
-{text}
---- POLICY END ---
+    Please audit the following privacy policy text and identify:
+    - ❌ Missing GDPR/CCPA clauses
+    - ⚠️ Potential risks or vague statements
+    - ❗ Any non-compliant sections
+
+    Respond clearly using markdown and section headings like:
+    ## Missing Clauses
+    ## Risks Identified
+    ## Non-compliant Wording
+
+    === Begin Privacy Policy ===
+    {text}
+    === End Privacy Policy ===
     """
 
     response = client.chat.completions.create(
-        model="openai/gpt-3.5-turbo",
-        messages=[{"role": "user", "content": prompt}]
+        model="openrouter/openai/gpt-3.5-turbo",
+        messages=[
+            {"role": "user", "content": prompt}
+        ]
     )
     return response.choices[0].message.content
