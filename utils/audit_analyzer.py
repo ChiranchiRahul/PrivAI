@@ -1,4 +1,10 @@
-def audit_privacy_policy(text, client):
+import pdfplumber
+
+def audit_privacy_policy(pdf_file, client):
+    # Extract text from PDF
+    with pdfplumber.open(pdf_file) as pdf:
+        text = "\n".join(page.extract_text() or "" for page in pdf.pages)
+
     prompt = f"""
     You are a privacy compliance expert.
 
