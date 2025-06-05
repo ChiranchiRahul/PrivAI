@@ -1,5 +1,3 @@
-# utils/audit_analyzer.py
-
 from utils.openrouter_client import get_client
 
 def analyze_policy(policy_text):
@@ -11,7 +9,7 @@ def analyze_policy(policy_text):
     ]
 
     response = client.chat.completions.create(
-        model="openrouter/openai/gpt-3.5-turbo",
+        model="gpt-3.5-turbo",  # ✅ FIXED here too
         messages=messages
     )
     return response.choices[0].message.content.strip()
