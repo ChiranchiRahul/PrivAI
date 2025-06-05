@@ -1,26 +1,12 @@
-import pdfplumber
-
-def audit_privacy_policy(pdf_file, client):
-    # Extract text from PDF
-    with pdfplumber.open(pdf_file) as pdf:
-        text = "\n".join(page.extract_text() or "" for page in pdf.pages)
-
+def generate_dsar(name, email, provider, req_type, client):
     prompt = f"""
-    You are a privacy compliance expert.
+    Write a formal DSAR letter based on the following info:
+    Name: {name}
+    Email: {email}
+    Company: {provider}
+    Request Type: {req_type}
 
-    Please audit the following privacy policy text and identify:
-    - ❌ Missing GDPR/CCPA clauses
-    - ⚠️ Potential risks or vague statements
-    - ❗ Any non-compliant sections
-
-    Respond clearly using markdown and section headings like:
-    ## Missing Clauses
-    ## Risks Identified
-    ## Non-compliant Wording
-
-    === Begin Privacy Policy ===
-    {text}
-    === End Privacy Policy ===
+    Make it polite, legally sound, and professional.
     """
 
     response = client.chat.completions.create(
