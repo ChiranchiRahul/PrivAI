@@ -5,7 +5,7 @@ from utils.audit_analyzer import audit_privacy_policy
 
 # 🔐 Load OpenRouter key from secrets
 client = OpenAI(
-    api_key=st.secrets["openai"]["api_key"],
+    api_key=st.secrets["openrouter"]["api_key"],
     base_url="https://openrouter.ai/api/v1"
 )
 
