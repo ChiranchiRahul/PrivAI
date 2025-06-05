@@ -8,8 +8,11 @@ def generate_dsar(name, email, provider, req_type, client):
 
     Make it polite, legally sound, and professional.
     """
+
     response = client.chat.completions.create(
         model="openrouter/openai/gpt-3.5-turbo",
-        messages=[{"role": "user", "content": prompt}]
+        messages=[
+            {"role": "user", "content": prompt}
+        ]
     )
     return response.choices[0].message.content
