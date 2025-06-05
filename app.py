@@ -3,7 +3,7 @@ from openai import OpenAI
 from utils.dsar_generator import generate_dsar
 from utils.audit_analyzer import audit_privacy_policy
 
-# 🔐 Load OpenRouter key from secrets
+# ✅ Load OpenRouter credentials correctly
 client = OpenAI(
     api_key=st.secrets["openrouter"]["api_key"],
     base_url="https://openrouter.ai/api/v1"
@@ -29,7 +29,7 @@ if page == "DSAR Generator":
             st.subheader("✉️ Generated DSAR Letter")
             st.code(dsar_text)
 
-# 🔎 2. Privacy Risk Audit
+# 🔍 2. Privacy Risk Audit
 elif page == "Privacy Risk Audit":
     st.title("🔍 Privacy Policy Risk Audit")
     uploaded_file = st.file_uploader("Upload Privacy Policy (PDF)", type=["pdf"])
