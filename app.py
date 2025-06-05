@@ -4,7 +4,10 @@ from utils.dsar_generator import generate_dsar
 from utils.audit_analyzer import audit_privacy_policy  # ✅ fixed import
 
 # 🔐 Use API key from secrets.toml
-client = OpenAI(api_key=st.secrets["openai"]["api_key"])
+client = OpenAI(
+    api_key=st.secrets["openai"]["api_key"],
+    base_url="https://openrouter.ai/api/v1"
+)
 
 # 🏠 Sidebar Navigation
 st.sidebar.title("🔒 PrivAI: PrivacyOps Assistant")
