@@ -1,31 +1,17 @@
-import pdfplumber
+# utils/audit_analyzer.py
 
-def audit_privacy_policy(pdf_file, client):
-    with pdfplumber.open(pdf_file) as pdf:
-        text = "\n".join(page.extract_text() or "" for page in pdf.pages)
+from utils.openrouter_client import get_client
 
-    prompt = f"""
-    You are a privacy compliance expert.
+def analyze_policy(policy_text):
+    client = get_client()
 
-    Please audit the following privacy policy text and identify:
-    - ❌ Missing GDPR/CCPA clauses
-    - ⚠️ Potential risks or vague statements
-    - ❗ Any non-compliant sections
-
-    Respond clearly using markdown and section headings like:
-    ## Missing Clauses
-    ## Risks Identified
-    ## Non-compliant Wording
-
-    === Begin Privacy Policy ===
-    {text}
-    === End Privacy Policy ===
-    """
+    messages = [
+        {"role": "system", "content": "You are a privacy compliance auditor."},
+        {"role": "user", "content": f"Analyze this privacy policy for GDPR/CCPA compliance:\n\n{policy_text}"}
+    ]
 
     response = client.chat.completions.create(
         model="openrouter/openai/gpt-3.5-turbo",
-        messages=[
-            {"role": "user", "content": prompt}
-        ]
+        messages=messages
     )
-    return response.choices[0].message.content
+    return response.choices[0].message.content.strip()
