@@ -9,22 +9,19 @@ DPDPA_CHUNKS = load_dpdpa_chunks()
 GDPR_CHUNKS = load_gdpr_chunks()
 CCPA_CHUNKS = load_ccpa_chunks()
 
-
 def ask_privacy_question(question):
     client = get_client()
 
-    include_dpdpa = any(x in question.lower() for x in ["dpdpa", "india", "Digital Personal Data Protection Act"])
-    include_gdpr = any(x in question.lower() for x in ["gdpr", "europe", "eu","General Data Protection Regulation"])
-    include_ccpa = any(x in question.lower() for x in ["ccpa", "california","California Consumer Privacy Act"])
+    include_dpdpa = any(x.lower() in question.lower() for x in ["dpdpa", "india", "digital personal data protection act"])
+    include_gdpr = any(x.lower() in question.lower() for x in ["gdpr", "europe", "eu", "general data protection regulation"])
+    include_ccpa = any(x.lower() in question.lower() for x in ["ccpa", "california", "california consumer privacy act"])
 
     system_msg = (
-    "You are a privacy assistant specialized in GDPR (EU), CCPA (California), and DPDPA (India). "
-    "Only provide rights or provisions that are explicitly written in the official text of each law. "
-    "For DPDPA, limit your response strictly to the 2023 Indian legislation and avoid importing GDPR-like rights "
-    "such as portability, objection, or automated processing unless they are clearly mentioned in the Act."
-)
-
-
+        "You are a privacy assistant specialized in GDPR (EU), CCPA (California), and DPDPA (India). "
+        "Only provide rights or provisions that are explicitly written in the official text of each law. "
+        "For DPDPA, limit your response strictly to the 2023 Indian legislation and avoid importing GDPR-like rights "
+        "such as portability, objection, or automated processing unless they are clearly mentioned in the Act."
+    )
 
     law_context = ""
     if include_gdpr:
