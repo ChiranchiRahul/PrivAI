@@ -19,9 +19,11 @@ def ask_privacy_question(question):
 
     system_msg = (
     "You are a privacy assistant specialized in GDPR (EU), CCPA (California), and DPDPA (India). "
-    "Base all answers strictly on actual provisions from the official text of each regulation. "
-    "Do not invent or infer rights or obligations unless directly mentioned in the law."
+    "Only list rights and obligations that are explicitly written in the respective laws. "
+    "Do not invent or infer provisions from other laws. For DPDPA, strictly reference the 2023 enacted version. "
+    "Avoid including GDPR-only rights (like data portability or objection) under DPDPA."
 )
+
 
     law_context = ""
     if include_gdpr:
