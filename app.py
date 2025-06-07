@@ -17,7 +17,7 @@ tab1, tab2, tab3 = st.tabs(["📄 Policy Analyzer", "📬 DSAR Generator", "💬
 
 # ------------------- TAB 1: Policy Analyzer -------------------
 with tab1:
-    st.subheader("🔍 Analyze Privacy Policy for GDPR/CCPA Compliance")
+    st.subheader("🔍 Analyze Privacy Policy for GDPR/CCPA/DPDPA Compliance")
 
     uploaded_file = st.file_uploader("Upload a privacy policy PDF", type="pdf")
 
@@ -62,7 +62,7 @@ with tab2:
 
 # ------------------- TAB 3: Privacy Q&A -------------------
 with tab3:
-    st.subheader("💬 Ask a Privacy Compliance Question (GDPR, CCPA, etc.)")
+    st.subheader("💬 Ask a Privacy Compliance Question (GDPR, CCPA,DPDPA etc.)")
 
     question = st.text_area("What do you want to know about privacy laws or data rights?")
 
