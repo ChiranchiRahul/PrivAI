@@ -10,7 +10,6 @@ DPDPA_CHUNKS = load_dpdpa_chunks()
 GDPR_CHUNKS = load_gdpr_chunks()
 CCPA_CHUNKS = load_ccpa_chunks()
 
-
 def ask_privacy_question(question):
     client = get_client()
 
@@ -19,10 +18,8 @@ def ask_privacy_question(question):
     include_ccpa = any(x.lower() in question.lower() for x in ["ccpa", "california", "california consumer privacy act"])
 
     system_msg = (
-        "You are a privacy assistant specialized in GDPR (EU), CCPA (California), and DPDPA (India).\n"
-        "Only provide rights or provisions that are explicitly written in the official text of each law.\n"
-        "Format the output as follows:\n"
-        "\n📘 [LAW NAME]:\n- [Right or provision] ([Section/Article number])\n- [Right or provision] ([Section/Article number])\n\nDo NOT include legal summaries or interpretations not present in the law excerpts."
+        "You are a privacy assistant specialized in GDPR (EU), CCPA (California), and DPDPA (India). "
+        "Answer clearly using grounded legal excerpts when applicable."
     )
 
     def get_rotated_chunks(chunks, max_words=1200):
@@ -50,20 +47,7 @@ def ask_privacy_question(question):
     user_prompt = f"""
 {law_context}
 
-Answer the following question using only the above legal text.\n
-List only explicitly granted rights or provisions and format them exactly like this:
-
-📘 GDPR (EU):
-- Right to access (Article 15)
-- Right to rectification (Article 16)
-
-📘 CCPA (California):
-- Right to know what personal data is collected (Section X)
-
-📘 DPDPA (India):
-- Right to confirmation and access (Section 11)
-- Right to correction and erasure (Section 12)
-
+Answer the following question using only the above legal text:
 {question}
 """ if law_context else question
 
