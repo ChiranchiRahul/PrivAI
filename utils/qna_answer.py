@@ -18,9 +18,10 @@ def ask_privacy_question(question):
     include_ccpa = any(x in question.lower() for x in ["ccpa", "california","California Consumer Privacy Act"])
 
     system_msg = (
-        "You are a privacy assistant specialized in GDPR (EU), CCPA (California), and DPDPA (India). "
-        "Answer clearly using grounded legal excerpts when applicable."
-    )
+    "You are a privacy assistant specialized in GDPR (EU), CCPA (California), and DPDPA (India). "
+    "Base all answers strictly on actual provisions from the official text of each regulation. "
+    "Do not invent or infer rights or obligations unless directly mentioned in the law."
+)
 
     law_context = ""
     if include_gdpr:
