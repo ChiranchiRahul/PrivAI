@@ -1,33 +1,41 @@
+# utils/qna_answer.py
+
 from utils.openrouter_client import get_client
 from utils.dpdpa_loader import load_dpdpa_chunks
+from utils.gdpr_loader import load_gdpr_chunks
+from utils.ccpa_loader import load_ccpa_chunks
 
-# Load DPDPA text once when app starts
 DPDPA_CHUNKS = load_dpdpa_chunks()
+GDPR_CHUNKS = load_gdpr_chunks()
+CCPA_CHUNKS = load_ccpa_chunks()
+
 
 def ask_privacy_question(question):
     client = get_client()
 
-    # Check if DPDPA is relevant
     include_dpdpa = any(x in question.lower() for x in ["dpdpa", "india", "Digital Personal Data Protection Act"])
+    include_gdpr = any(x in question.lower() for x in ["gdpr", "europe", "eu","General Data Protection Regulation"])
+    include_ccpa = any(x in question.lower() for x in ["ccpa", "california","California Consumer Privacy Act"])
 
     system_msg = (
-        "You are a privacy assistant specialized in GDPR, CCPA, and DPDPA (India). "
-        "Answer clearly using plain language."
+        "You are a privacy assistant specialized in GDPR (EU), CCPA (California), and DPDPA (India). "
+        "Answer clearly using grounded legal excerpts when applicable."
     )
 
+    law_context = ""
+    if include_gdpr:
+        law_context += f"\n\n**GDPR Reference:**\n{GDPR_CHUNKS[0]}"
+    if include_ccpa:
+        law_context += f"\n\n**CCPA Reference:**\n{CCPA_CHUNKS[0]}"
     if include_dpdpa:
-        # Inject top 3 chunks from DPDPA (very simple for now)
-        law_context = "\n\n".join(DPDPA_CHUNKS[:3])
-        user_prompt = f"""
-Refer to the following text from India's DPDPA:
+        law_context += f"\n\n**DPDPA Reference:**\n{DPDPA_CHUNKS[0]}"
 
+    user_prompt = f"""
 {law_context}
 
 Now answer this question:
 {question}
-"""
-    else:
-        user_prompt = question
+""" if law_context else question
 
     messages = [
         {"role": "system", "content": system_msg},
