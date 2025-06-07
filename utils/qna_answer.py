@@ -9,6 +9,7 @@ DPDPA_CHUNKS = load_dpdpa_chunks()
 GDPR_CHUNKS = load_gdpr_chunks()
 CCPA_CHUNKS = load_ccpa_chunks()
 
+
 def ask_privacy_question(question):
     client = get_client()
 
@@ -23,18 +24,30 @@ def ask_privacy_question(question):
         "such as portability, objection, or automated processing unless they are clearly mentioned in the Act."
     )
 
+    def get_chunks(chunks, max_words=1200):
+        output = []
+        total = 0
+        for c in chunks:
+            w = len(c.split())
+            if total + w <= max_words:
+                output.append(c)
+                total += w
+            else:
+                break
+        return "\n".join(output)
+
     law_context = ""
     if include_gdpr:
-        law_context += f"\n\n**GDPR Reference:**\n{GDPR_CHUNKS[0]}"
+        law_context += f"\n\n[GDPR LAW EXCERPT]\n{get_chunks(GDPR_CHUNKS)}"
     if include_ccpa:
-        law_context += f"\n\n**CCPA Reference:**\n{CCPA_CHUNKS[0]}"
+        law_context += f"\n\n[CCPA LAW EXCERPT]\n{get_chunks(CCPA_CHUNKS)}"
     if include_dpdpa:
-        law_context += f"\n\n**DPDPA Reference:**\n{DPDPA_CHUNKS[0]}"
+        law_context += f"\n\n[DPDPA LAW EXCERPT]\n{get_chunks(DPDPA_CHUNKS)}"
 
     user_prompt = f"""
 {law_context}
 
-Now answer this question:
+Answer the following question using only the above legal text:
 {question}
 """ if law_context else question
 
