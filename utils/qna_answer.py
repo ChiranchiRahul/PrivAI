@@ -1,5 +1,6 @@
 # utils/qna_answer.py
 
+import random
 from utils.openrouter_client import get_client
 from utils.dpdpa_loader import load_dpdpa_chunks
 from utils.gdpr_loader import load_gdpr_chunks
@@ -24,10 +25,12 @@ def ask_privacy_question(question):
         "such as portability, objection, or automated processing unless they are clearly mentioned in the Act."
     )
 
-    def get_chunks(chunks, max_words=1200):
+    def get_rotated_chunks(chunks, max_words=1200):
+        shuffled = chunks[:]
+        random.shuffle(shuffled)
         output = []
         total = 0
-        for c in chunks:
+        for c in shuffled:
             w = len(c.split())
             if total + w <= max_words:
                 output.append(c)
@@ -38,11 +41,11 @@ def ask_privacy_question(question):
 
     law_context = ""
     if include_gdpr:
-        law_context += f"\n\n[GDPR LAW EXCERPT]\n{get_chunks(GDPR_CHUNKS)}"
+        law_context += f"\n\n[GDPR LAW EXCERPT]\n{get_rotated_chunks(GDPR_CHUNKS)}"
     if include_ccpa:
-        law_context += f"\n\n[CCPA LAW EXCERPT]\n{get_chunks(CCPA_CHUNKS)}"
+        law_context += f"\n\n[CCPA LAW EXCERPT]\n{get_rotated_chunks(CCPA_CHUNKS)}"
     if include_dpdpa:
-        law_context += f"\n\n[DPDPA LAW EXCERPT]\n{get_chunks(DPDPA_CHUNKS)}"
+        law_context += f"\n\n[DPDPA LAW EXCERPT]\n{get_rotated_chunks(DPDPA_CHUNKS)}"
 
     user_prompt = f"""
 {law_context}
