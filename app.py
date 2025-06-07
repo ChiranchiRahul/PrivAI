@@ -62,7 +62,7 @@ with tab2:
 
 # ------------------- TAB 3: Privacy Q&A -------------------
 with tab3:
-    st.subheader("💬 Ask a Privacy Compliance Question (GDPR, CCPA,DPDPA etc.)")
+    st.subheader("💬 Ask a Privacy Compliance Question (GDPR, CCPA, DPDPA etc.)")
 
     question = st.text_area("What do you want to know about privacy laws or data rights?")
 
